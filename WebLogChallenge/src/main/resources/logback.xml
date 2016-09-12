@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- configuration file for LogBack (slf4J implementation) See here for more 
+	details: http://gordondickens.com/wordpress/2013/03/27/sawing-through-the-java-loggers/ -->
+<!DOCTYPE configuration>
+<configuration scan="true" scanPeriod="30 seconds">
+
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>true</resetJUL>
+    </contextListener>
+
+    <!-- To enable JMX Management -->
+    <jmxConfigurator/>
+
+    <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date{YYYY-MM-dd HH:mm:ss.SSS} %-5level | %msg | %class \(%file:%line\) [%thread] %n</pattern>
+        </encoder>
+    </appender>
+
+    <property name="LOGS_HOME" value="/logs"/>
+
+    <appender name="fileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS_HOME}/SparkDemo.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS_HOME}/archived/SparkDemo.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>365</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%date{YYYY-MM-dd HH:mm:ss.SSS} %5level | %msg | %class \(%file:%line\) [%thread] %n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="orgFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS_HOME}/SparkDemo.org.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS_HOME}/archived/SparkDemo.%d{yyyy-MM-dd}.org.log</fileNamePattern>
+            <maxHistory>365</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%date{YYYY-MM-dd HH:mm:ss.SSS} %5level | %msg | %class \(%file:%line\) [%thread] %n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="weblog" level="info">
+        <appender-ref ref="fileAppender"/>
+    </logger>
+
+    <logger name="org" level="warn">
+        <appender-ref ref="orgFileAppender"/>
+    </logger>
+
+    <root level="warn">
+        <appender-ref ref="consoleAppender"/>
+    </root>
+</configuration>
